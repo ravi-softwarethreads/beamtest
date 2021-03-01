@@ -106,24 +106,12 @@ public class ProcessLog {
         }
     }
 
-    public static class removePrefixOne extends SimpleFunction<String, String> {
+    public static class removePrefix extends SimpleFunction<String, String> {
         @Override
         public String apply(String line) {
-            if (line.startsWith("1"))
-                return line.substring(1);
-            else return "";
+            return line.substring(1);
         }
     }
-
-    public static class removePrefixTwo extends SimpleFunction<String, String> {
-        @Override
-        public String apply(String line) {
-            if (line.startsWith("2"))
-                return line.substring(1);
-            else return "";
-        }
-    }
-
 
     public interface ProcessLogOptions extends PipelineOptions {
         @Description("Path of the file to read from")
@@ -154,9 +142,9 @@ public class ProcessLog {
         PCollection<String> archive = p.apply("ReadLines", TextIO.read().from(options.getInputFile()))
                 .apply(new GetLogItems())
                 .apply(MapElements.via(new FormatAsJson()));
-        archive.apply(Filter.by(x->!x.equals(""))).apply(TextIO.write().to(options.getOutputArchive()).withoutSharding());
-        archive.apply(Filter.by(x->x.startsWith("1"))).apply(MapElements.via(new removePrefixOne())).apply(TextIO.write().to(options.getOutputOne()).withoutSharding());
-        archive.apply(Filter.by(x->x.startsWith("2"))).apply(MapElements.via(new removePrefixTwo())).apply(TextIO.write().to(options.getOutputTwo()).withoutSharding());
+        archive.apply(Filter.by(x->!x.equals(""))).apply(MapElements.via(new removePrefix())).apply(TextIO.write().to(options.getOutputArchive()).withoutSharding());
+        archive.apply(Filter.by(x->x.startsWith("1"))).apply(MapElements.via(new removePrefix())).apply(TextIO.write().to(options.getOutputOne()).withoutSharding());
+        archive.apply(Filter.by(x->x.startsWith("2"))).apply(MapElements.via(new removePrefix())).apply(TextIO.write().to(options.getOutputTwo()).withoutSharding());
      p.run().waitUntilFinish();
     }
 
