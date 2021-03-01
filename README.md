@@ -24,8 +24,5 @@ output/routeone/one.txt for valid log entries with log format "1" specified with
 output/routetwo/two.txt for valid log entries with log format "2" specified with arg --outputTwo=output/routetwo/two.txt
 archive/archive.txt for all valid log entries in input specified with arg --outputArchive=archive/archive.txt
 
+Thanks.
 
-                                   output/routetwo for log entries with log format "2"
-                                   archive
- 
- 
